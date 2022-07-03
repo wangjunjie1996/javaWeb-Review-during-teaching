@@ -4,4 +4,14 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <!--注册servlet-->
+  <servlet>
+    <servlet-name>hello</servlet-name>
+    <servlet-class>com.web.servlet.HelloServlet</servlet-class>
+  </servlet>
+  <!--servlet 请求路径-->
+  <servlet-mapping>
+    <servlet-name>hello</servlet-name>
+    <url-pattern>/hello</url-pattern>
+  </servlet-mapping>
 </web-app>
