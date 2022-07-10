@@ -1,0 +1,83 @@
+﻿【复习】
+	用自己的话描述什么是spring（你对spring的了解）
+	IoC、DI、AOP    （aop深入就要讲讲动态代理了）
+		pointcut
+		aspect
+		advisor
+		message、advice
+	getBean()的三种方式及注意事项
+		三种方式：id、name、class
+		原则：用唯一的
+		
+【bean的作用域和生命周期】
+	bean的作用域（<bean>的scope属性，四种）
+			singleton*，
+				配置文件加载时创建一个，不管获取多少次就这一个对象
+				.hashCode()
+			prototype，每次获取bean都会提供一个新的（创建）
+			request
+			session
+	
+	☆ 编写的Service、Dao类，都符合要求，都可以配置到<bean></bean>	*  dataSource
+		
+	
+	init-method、destroy-method
+	
+	生命周期
+		对象: 初始化  -   -   -   销毁
+		init-method				destroy-method
+		
+	——————————示例分析	
+	【1】	
+	<bean id="user2" class="hpe.bean.User" 
+		init-method="initabc" destroy-method="destroy123" scope="prototype" >		
+---init 了
+-----1调用之前
+---init 了
+
+	【2】
+	<bean id="user2" class="hpe.bean.User" 
+		init-method="initabc" destroy-method="destroy123"
+		scope="singleton">
+---init 了
+-----1调用之前
+---destroy123 了
+
+	【对比☆】
+		配置上：scope="prototype"     scope="singleton"
+		输出上：创建					创建
+				没销毁（创建）			销毁
+		
+		☆☆☆注意（2个点）：
+			singleton：创建一个
+				bean的生命周期（创建-销毁）都由spring管理
+				
+			prototype：每次获取 （getBean）创建一个
+				bean的生命周期（创建-销毁）由spring管理？？？不是
+				创建    getBean()
+							只有创建由spring管理，销毁由调用者管理
+						getBean()之后再创建一个新的
+
+
+db.properties				
+XML文件方式
+	getBean()
+【注解的方式】
+	
+对比：
+1）java类中变化：
+	@Component
+	@Value("user112312312312323")
+
+2）bean.xml
+	<!--
+	<bean id class>
+		//
+	</bean>
+	-->
+	<context:component-scan base-package="hpe.bean.anno"/>
+
+	
+	XML + 注解的方式
+	XML + properties
+不需要单独配置bean	

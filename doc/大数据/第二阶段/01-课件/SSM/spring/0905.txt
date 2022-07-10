@@ -1,0 +1,62 @@
+
+框架、service
+轻量级（非侵入）、
+一站式、开源
+DI
+IoC
+	<bean id="" name="" class="包名.类名" >
+		...
+	</bean>
+	getBean (...)
+AOP
+	OOP
+=======================
+例子：
+show0827 -> Dao(mapper)
+	lib -> user Libraries
+	(base demo)
+
+【整合】（从以前写的mybatis工程的基础上展示）
+1）引入jar包（mybatis-spring）
+
+2）调整配置文件 ☆
+	mybatis			=>		spring（beans）
+	SqlMapConfig.xml  ->	applicationContext.xml
+	
+	* ①dataSource（pool）	 *<bean id="dataSource" class="">
+	* ②Transaction Manager	  *<bean ...>
+	* ③ mappers（dao）			*<bean MapperScannerConfigurer>
+		<mapper resource=""/> 		
+		<mapper class=""/>
+		
+		* <package name="包名"/>
+									* <bean SqlSessionFactorybean>
+									
+	【mybatis】								
+	* SqlSession conn= SqlSessionFactory.openSession()
+	Mapper动态代理对象 = conn.getMapper(UserDao.class)
+	-->
+		.getBean ("userDao")
+		
+mybatis（持久层、Dao）
+
+
+
+
+
+	
+* spring工程开发步骤：
+1）引入jar
+2）加载配置文件
+	BeanFactory
+		ApplicationContext atx
+3）获取bean对象
+	ApplicationContext.getBean(?)
+		三种方式：id、name、class
+	
+applicationContext.xml
+
+
+
+
+	

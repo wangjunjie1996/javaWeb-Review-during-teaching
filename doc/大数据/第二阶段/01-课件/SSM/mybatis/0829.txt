@@ -1,0 +1,81 @@
+
+1. 使用mybatis做mysql数据库的增、删、改操作
+	public int addUser(User u) throws Exception {
+		/*
+			从数据库连接池获取一个sql连接（SqlSession）
+				☆ 事务默认不自动提交：autoCommit = false
+		*/
+		SqlSession conn = sessionFactory.openSession();
+
+		int ire = conn.insert("test.addUser", u);
+		
+		//☆ 显示的提交事务，写数据到数据库
+		conn.commit();
+		
+		//释放资源
+		conn.close();
+		
+		return ire;
+	}
+
+2. 演示用的user表中，ID是自增长字段，☆如何获取插入数据的ID字段值？？？
+	方式扩展：<selectKey>
+
+
+	<insert id="addUser"  parameterType="user" >
+		<selectKey keyProperty="id" order="AFTER" resultType="int">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into user(username,pwd,birthday,sex,address)
+		 values(#{username},#{pwd},#{birthday},#{sex},#{address}) 
+	</insert>
+
+
+3. ☆动态SQL
+	使用
+	<if test="">
+	
+	</if>
+	
+	
+	<where>
+	
+	<set>
+select * from user where id=1 or id=2 or id=3;
+select * from user where id in (1,2,3)
+
+
+
+
+4. ☆Mapper动态代理实现DAO
+1）接口文件名和映射文件名一致；
+2）namespace必须写接口的全路径；
+<mapper namespace="hpe.dao.IUserOption">
+
+3）statmentID与接口的方法名一致
+
+
+
+5.DAO开发实现方式
+定义好接口
+1）传统的实现类的方式（实现接口）
+	使用：new对象.方法()
+2） Mapper动态代理实现DAO
+	使用：获取mapper动态代理对象
+	mapper动态代理对象.方法()
+
+6. 一些细节
+1）SqlSession调用close()后，是销毁了还是归还到线程池了？
+	* jdbc获取的Session调用close()后，是销毁了还是归还到线程池了？
+
+	log4j
+	
+	Returned connection 1301664418 to pool.
+	
+2）如果实体类中属性的名字与数据库表的字段名有出入（不一致），怎么办？
+	类        表
+	名1		名1
+	名2		名2222222
+	……
+	
+	resultMap

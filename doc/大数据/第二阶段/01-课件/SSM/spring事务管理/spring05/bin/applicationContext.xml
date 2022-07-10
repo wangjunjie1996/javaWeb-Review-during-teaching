@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 加载外部的资源文件 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+
+	<!-- 数据库连接池 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}"></property>
+		<property name="jdbcUrl" value="${jdbc.url}"></property>
+		<property name="user" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+	
+	<!-- 配置SqlSessionFactory，通过spring来管理会话工厂 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 配置数据源 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 加载mybatis的全局配置文件 -->
+		<!-- <property name="configLocation" value="classpath:mybatis.xml"></property> -->
+		<!-- spring起别名 -->
+		<property name="typeAliasesPackage" value="com.hpe.pojo"></property>
+	</bean>
+	
+	<!-- mapper动态代理 .通过扫描 批量加载mapper接口，来创建代理bean，这些bean 的名字就是 接口名字的 首字母小写-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 指定mapper接口的包路径 -->
+		<property name="basePackage" value="com.hpe.mapper"></property>
+	</bean>
+	
+	<context:component-scan base-package="com.hpe.service"></context:component-scan>
+	
+	<!-- spring事务管理   事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 注入DataSource -->
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- 配置事务的通知   :  需要指定事务管理器-->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 对哪些方法进行事务管理
+				传播行为 ：默认值为  propagation="REQUIRED" ：当前方法必须运行在事务中，如果当前没有事务，则会开启一个新的事务；如果有事务，那么使用当前的事务 
+						propagation="SUPPORTS": 当前方法不需要事务，如果当前没有事务，则不使用事务；如果有事务，则使用当前的事务
+						propagation="REQUIRED_NEW"：   当前方法必须运行在一个新的事务中。
+				no-rollback-for： 不会滚的异常
+					-->
+			<tx:method name="tran*" propagation="REQUIRED" no-rollback-for="java.lang.ArithmeticException"/>
+			<tx:method name="add*" propagation="REQUIRED"/>
+			<tx:method name="del*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="select*" propagation="SUPPORTS"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 配置aop事务 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.hpe.service..*.*(..))" id="cut1"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="cut1"/>
+	</aop:config>
+	
+	
+</beans>

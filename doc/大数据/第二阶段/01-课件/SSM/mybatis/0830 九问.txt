@@ -1,0 +1,160 @@
+1. where条件在SQL查询、修改、删除语句中都可能用到，如何共享使用（避免重复编写）？
+	
+	【sql片段】
+	   id1
+	 where 1=1 
+		<if test="username!=null and username!=''"> 
+			and username=#{useranme}
+		</if>
+	 and pwd=? and sex=?
+	
+
+	动态sql
+		
+	<select>
+	select * from user
+	
+
+delete from user 
+	【sql片段】
+select * from user 
+		【sql片段】
+update set pwd=?,   
+		【sql片段】
+	 
+	 
+2. 映射资源除了使用下列方式外，还有没有其他方式？
+<mapper file=""/>
+
+<mapper resource="mapper.xml"/>
+<mapper class=""/>
+class
+url
+package
+
+3. 如果某工程定义了多个dao接口（有响应的mapper文件），
+需要将这些映射关系添加到哪个文件才能生效？如何添加？
+<mapper class="hpe.dao.IUserOption"/>
+<mapper class="hpe.dao.IUserOption2"/>
+<mapper class="hpe.dao.IUserOption3"/>
+<mapper class="hpe.dao.IUserOption4"/>
+<mapper class="hpe.dao.IUserOption5"/>
+……
+<mapper class="hpe.dao.IUserOption100"/>
+
+【使用package】
+
+
+4. #{}   与   ${}区别？
+?
+拼接，如果是字符串：#{} 自动加上引号；${}不加引号，直接拼接
+* 简单类型       #{id} 、#{value}
+	${value}
+	燕子李三
+	where username=#{username}
+		where username='燕子李三'
+	where username=${username}
+		where username=燕子李三
+* 安全测试（密码绕过）：${} 有SQL注入风险
+
+
+<select id="getUserById" parameterType="hpe.po.User"
+		resultType="hpe.po.User" >
+		select * from user where username=?  and pwd=#{pwd}
+</select>
+	
+	
+	
+
+${id}、${value}
+
+
+5. parameterType、resultType、resultMap分别是做什么用的？
+parameterType：【输入参数】类型
+resultType：【输出结果】类型
+	理想情况：实体类属性名称与数据库表的列名称一致
+resultMap：【输出结果】映射
+	实体类个别属性名称与数据库表的列名称不一致
+	
+（解决不一致的情况）		
+	resultMap：【输出结果】映射
+	select id id123,name name456 from user
+
+
+6. 常见DAO开发方式？（实现、调用）
+“面向接口编程”
+定义接口
+1）传统的开发方式
+	实现：创建实现类，实现接口中的方法
+	调用：
+		对象obj = new 实现类();
+		返回值 = obj.方法（参数）
+	* mapper.xml
+2）mapper动态代理
+	实现：创建mapper.xml，规则要求如下
+		① mapper.xml文件名与接口名一致
+		② mapper.xml中namespace的值是接口的全路径
+		③ statment id与接口中的方法名一致（sql、输入结果、输出结果）
+			④ 输入参数类型在mapper.xml文件与接口中定义一致
+			⑤ 输出结果类型在mapper.xml文件与接口中定义一致
+	调用：
+		mapper的动态代理对象 = SqlSession.getMapper(接口名.class)
+		返回值 = 动态代理对象.方法（参数）
+
+【mapper添加到SqlMapConfig.xml】
+	
+		
+
+
+
+7. mybatis工作过程（原理）？与hibernate关系？与jdbc关系？
+（分别比较优势和不足）
+
+相同：
+	持久层、jdbc、ORM
+不同：
+	优势
+	不足
+
+
+
+
+
+8. Servlet与jsp页面之间如何交互（值的传递与接收）？
+  u     --- jsp -> 提交表单 -> get（）
+				<-
+
+
+
+9. servlet的工程与mybatis练习创建的工程类型是一样的吗？
+servlet的工程   dynamic web project
+	apache-tomcat
+mybatis			java project
+
+
+
+
+*. 多表联查
+	select a.id id,b.name name,c.address address
+		from a,b,c 
+		where
+
+
+
+
+
+
+
+		map
+		pojo
+		
+select * from user where username=? and pwd=?
+
+<set>
+</set>
+update user set username=?,pwd=? where id=?
+
+
+<foreach>
+select * from user where id in (?,?,?)
+select * from user where id=? or id=? or id=?

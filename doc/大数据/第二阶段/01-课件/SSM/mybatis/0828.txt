@@ -1,0 +1,32 @@
+1.  #{}    ${}区别： 
+		#{}	相当于PreparedStatment中的占位符  ?
+			如果参数数字符串，会自动加上引号
+		${}	直接拼接
+		
+2. mapper映射开发步骤：
+1) 根据要求（用户登录）把sql语句写出来
+	select * from user where username="张三" and pwd="123";
+	
+2) 确认sql语句是正确的
+	在navicat for mysql客户端（mysql客户端）执行通过
+
+3) 添加到mapper.xml文件
+	<select id="sdfssdfsf" parameterType="hpe.po.User" resultType="hpe.po.User">
+		select * from user  where username=#{username} and pwd=#{pwd}
+	</select>
+
+4) 定义接口方法
+5）实现接口方法	
+6）测试 JUnit
+	
+3. mapper.xml中可以配置模糊查询
+
+4. 如果查询返回多条结果，返回值类型resultType如何设置？
+selectList
+
+
+5. *掌握：user libraries
+	减少磁盘占用，调用方便
+	简化操作（添加用户库即可，不用复制jar包到lib目录下再点击右键添加）
+
+6. 传统Dao开发

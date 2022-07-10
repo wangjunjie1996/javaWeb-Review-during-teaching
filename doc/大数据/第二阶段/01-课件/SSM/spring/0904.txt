@@ -1,0 +1,91 @@
+AOP   OOP*
+IoC * 
+full-stack *
+	全栈、框架、完整的？？结构、
+	
+aspectj *
+	AOP
+	
+@Component
+	注解（作用？）
+	通用？  @Service 、@Controller、@Repostory
+	
+	
+	bean装配：
+	<bean id="" class="" />
+	
+	
+	
+	
+	<!-- 批量 scan  -->
+	<context:** -scan ....
+
+————————————————————————————————  知识输出...
+
+Aspectj
+1）jar包（注解、AOP）
+2）基于XML
+① 增强的代码应用到哪个（些）方法上  point cut
+② 应用到方法的前面？后面？around    
+	<aop:after
+③ 实现增强的方法名method
+		<aop:pointcut expression="execution(* hpe.module.CalcImpl.*(..))"
+		  id="calcPointcut"/>
+		 
+		 <!-- 增强的类message1中的方法，应用到切点上calcPointcut -->
+		<aop:aspect ref="message1">
+			<!--前置通知：
+				 aop:before,  在切点（add方法）之【前】执行 -->
+			<aop:before method="before1" pointcut-ref="calcPointcut"/>
+			<!-- aop:after,  在切点（add方法）之【后】执行 -->
+			<aop:after method="after1" pointcut-ref="calcPointcut"/>
+			
+			<aop:around method="around1" pointcut-ref="calcPointcut"/>
+
+		</aop:aspect>
+
+3）基于注解方式
+@Aspect
+@Before(value="execution( )")
+@After
+@Around
+
+<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+
+
+=======	mybatis+ spring
+
+回顾mybatis
+	Dao开发
+		传统的
+		Mapper动态 *
+			① 定义一个xml，要求如下：
+				和接口文件放一块
+				命名：和接口一致
+			② mapper  namespace要赋值为接口的全路径名
+			③ xml文件中的配置细节（对比接口信息）
+				a. 接口的方法名与id一致
+				b. 输入要一致（参数类型、个数一致）
+				c. 输出要一致（返回值类型）
+				
+☆ 有借有还，再借不难
+	连接池的连接数是有限的……
+	 Returned connection 1110623531 to pool.
+	
+【整合过程】
+找一个以前写的mybatis工程（使用mapper动态代理方式实现Dao的）
+1）导入jar包
+	mybatis-spring-1.2.2.jar
+2）创建spring配置文件
+3）逐步的将mybatis的配置参数调整到Spring中
+4）getBean()获取Dao对象，测试
+5）完成整合
+
+
+
+
+
+	
+	
+	

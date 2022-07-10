@@ -1,0 +1,6 @@
+1. 使用纯JDBC操作mysql的编程步骤？
+2. JDBC、dbutils、C3P0之间有什么关系？
+3. java EE的主流框架组合有哪些?
+4. Mybatis、jdbc及Hibernate有关系吗？
+5. Spring、mybatis最新版本号是多少？
+6. 面向接口编程的思想、反射、动态代理、JUnit的使用、ORM

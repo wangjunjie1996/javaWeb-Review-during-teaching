@@ -1,0 +1,164 @@
+【复习】
+	用自己的话描述什么是spring（你对spring的了解）
+	IoC、DI、AOP
+		joinpoint、	pointcut
+		aspect
+		advisor
+		message、advice
+	getBean()的三种方式及注意事项
+		三种方式：id、name、class
+		原则：用唯一的
+		
+【bean的作用域和生命周期】
+	bean的作用域（<bean>的scope属性，四种）
+			singleton*，
+				配置文件加载时创建一个，不管获取多少次就这一个对象
+				.hashCode()
+			prototype，每次获取bean都会提供一个新的（创建）
+			request
+			session
+	
+	☆ 编写的Service、Dao类，都符合要求，都可以配置到<bean></bean>	*  dataSource
+		
+	
+	init-method、destroy-method
+	
+	生命周期
+		对象: 初始化  -   -   -   销毁
+		init-method				destroy-method
+		
+	——————————示例分析	
+	【1】	
+	<bean id="user2" class="hpe.bean.User" 
+		init-method="initabc" destroy-method="destroy123" scope="prototype" >		
+---init 了
+-----1调用之前
+---init 了
+
+	【2】
+	<bean id="user2" class="hpe.bean.User" 
+		init-method="initabc" destroy-method="destroy123"
+		scope="singleton">
+---init 了
+-----1调用之前
+---destroy123 了
+
+	【对比☆】
+		配置上：scope="prototype"     scope="singleton"
+		输出上：创建					创建
+				没销毁（创建）			销毁
+		
+		☆☆☆注意（2个点）：
+			singleton：创建一个
+				bean的生命周期（创建-销毁）都由spring管理
+				
+			prototype：每次获取 （getBean）创建一个
+				bean的生命周期（创建-销毁）由spring管理？？？不是
+				创建    getBean()
+							只有创建由spring管理，销毁由调用者管理
+						getBean()之后再创建一个新的
+
+
+======================================
+☆☆☆☆☆   bean的装配		☆☆☆☆☆
+======================================					
+【1. XML文件方式】
+	db.properties
+	getBean()
+【2. 注解的方式】
+
+对比：
+1）java类中变化：
+	@Component
+	@Value("user112312312312323")
+
+2）bean.xml
+	<!--
+	<bean id class>
+		//
+	</bean>
+	-->
+	<context:component-scan base-package="hpe.bean.anno"/>
+
+	
+	XML + 注解的方式
+	XML + properties
+不需要单独配置bean	
+
+【给属性赋值：3种类型】
+注解@Value：简单类型
+	@Value("user123")
+	位置：属性上面、set方法上面
+	（！！！ 别尝试有的放位置1，有的放位置2，！没法维护！！！）
+	
+注解@Resource：【集合属性】  
+	集合属性都是xml文件中定义好一个，需要的时候根据ID引用过去
+		name ： 指定bean的id
+	//@Autowired 能不能用，为什么不用？
+	@Resource(name="mylist")
+	List<String> list;
+	
+注解@Autowired：【pojo对象属性】
+	怎么自动的？
+	@Autowired
+	private User2 user2;//对象
+
+【分层设计的java类注解】
+1）@Component通用的，不建议使用，使用下面的：
+@Repository
+	Dao、po
+@Service
+	service
+@Controller
+	controller
+2）使用面向接口编程（定义好接口，再写实现类）
+注解标到“实现类”
+	@Service("接口名")
+相当于配置文件中指定的id
+<bean id="userService" class="service.UserServiceImpl"/>
+
+----例子
+@Service("userService")
+public class UserServiceImpl implements IUserService {
+
+}
+
+
+=============	AOP 面向切面编程
+
+原始的方法不修改，增加内容（增加输入数据校验、日志记录……）
+1）jdk动态代理实现（帮助你理解aspectj的原理）————————有空的时候看看想想
+	不影响aspectj使用
+2）aop原始的实现————————有空的时候看看想想
+
+3）【掌握】aspectj的使用方式
+	XML配置方式<aop:config>
+
+	
+
+
+
+需求变更……
+
+【甲方】
+	1. 在计算之前加个日志，计算之后加个日志
+	2. 日志需清晰，能看出来执行的哪个方法
+	
+	== add, 开始
+	-- add, 结束
+	3. 打印的日志，最后加上...比较好看
+	……
+
+
+
+		
+	
+AOP：  消息增强到原来的方法上了
+	1. 准备增强的代码（校验、日志记录、……）
+	2. 定义好要增强的方法（point cut)
+	3. AOP: pointCut + Advice
+	
+	目的：增强它（加点日志、加点校验、）
+	要求：原始的方法（不改）
+	实现：AOP（把增强的代码放到合适的位置point cut）
+	
